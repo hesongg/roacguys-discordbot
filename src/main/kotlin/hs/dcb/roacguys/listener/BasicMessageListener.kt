@@ -40,9 +40,10 @@ class BasicMessageListener : AbstractMessageListener() {
 
     private fun sendHelpMessage(eventTextChannel: MessageChannelUnion) {
         val sb = StringBuilder()
-        sb.append("명령어 설명 ! 업데이트 예정..\n\n")
+        sb.append("명령어 설명! 업데이트 예정..\n\n")
         sb.append(Consts.COMMAND_HELP + Consts.COMMAND_SPACE + Consts.COMMAND_HELP_DESC + "\n")
         sb.append(Consts.COMMAND_CHECK + Consts.COMMAND_SPACE + Consts.COMMAND_CHECK_DESC + "\n")
+        sb.append("\n\n github repo - " + Consts.MY_REPO)
 
         eventTextChannel.sendMessage(sb.toString()).queue()
     }
