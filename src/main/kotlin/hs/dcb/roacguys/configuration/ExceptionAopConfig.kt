@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component
 
 @Component
 @Aspect
-class exceptionAopConfig {
+class ExceptionAopConfig {
 
     val log = LoggerFactory.getLogger(BasicMessageListener::class.java)
 

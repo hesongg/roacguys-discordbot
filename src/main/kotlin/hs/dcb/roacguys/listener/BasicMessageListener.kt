@@ -1,6 +1,7 @@
 package hs.dcb.roacguys.listener
 
 import hs.dcb.roacguys.common.const.Consts
+import hs.dcb.roacguys.common.embed.CommonEmbedBuilder
 import hs.dcb.roacguys.common.exception.MessageException
 import hs.dcb.roacguys.listener.abstract.AbstractMessageListener
 import net.dv8tion.jda.api.entities.User
@@ -39,13 +40,15 @@ class BasicMessageListener : AbstractMessageListener() {
     }
 
     private fun sendHelpMessage(eventTextChannel: MessageChannelUnion) {
-        val sb = StringBuilder()
-        sb.append("명령어 설명! 업데이트 예정..\n\n")
-        sb.append(Consts.COMMAND_HELP + Consts.COMMAND_SPACE + Consts.COMMAND_HELP_DESC + "\n")
-        sb.append(Consts.COMMAND_CHECK + Consts.COMMAND_SPACE + Consts.COMMAND_CHECK_DESC + "\n")
-        sb.append("\n\n github repo - " + Consts.MY_REPO)
 
-        eventTextChannel.sendMessage(sb.toString()).queue()
+        val eb = CommonEmbedBuilder.getEmbedBuilder("명령어 설명! 업데이트 예정")
+        eb.addField(Consts.COMMAND_HELP, Consts.COMMAND_HELP_DESC, false)
+        eb.addField(Consts.COMMAND_CHECK, Consts.COMMAND_CHECK_DESC, true)
+
+        eb.addBlankField(false)
+        eb.setFooter(Consts.MY_REPO)
+
+        eventTextChannel.sendMessageEmbeds(eb.build()).queue()
     }
 
     private fun sendCheckMessage(eventTextChannel: MessageChannelUnion, user: User) {
