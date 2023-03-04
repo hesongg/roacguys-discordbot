@@ -39,7 +39,8 @@ class BasicMessageListener : AbstractMessageListener() {
         eb.addField(Consts.COMMAND_CHECK, Consts.COMMAND_CHECK_DESC, false)
         eb.addField(Consts.COMMAND_GET_ALL_CHARACTERS + Consts.VARIABLE_CHARACTER_NAME,
                 Consts.COMMAND_GET_ALL_CHARACTERS_DESC, false)
-        eb.addField(Consts.COMMAND_GET_PROFILE + Consts.VARIABLE_CHARACTER_NAME,
+        eb.addField(Consts.COMMAND_GET_PROFILE +
+                Consts.VARIABLE_CHARACTER_NAME + "," + Consts.VARIABLE_CHARACTER_NAME,
                 Consts.COMMAND_GET_PROFILE_DESC, false)
 
         eb.addBlankField(false)

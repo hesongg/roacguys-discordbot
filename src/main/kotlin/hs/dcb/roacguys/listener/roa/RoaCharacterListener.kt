@@ -33,14 +33,22 @@ class RoaCharacterListener(roaClient: RoaClient) : AbstractMessageListener() {
             return
         }
         if (contentRaw.startsWith(Consts.COMMAND_GET_PROFILE)) {
-            sendCharacterProfile(eventTextChannel, contentRaw)
+            val charNmsStr = contentRaw.replace(Consts.COMMAND_GET_PROFILE, "")
+            val charNms = charNmsStr.split(",")
+
+            for (i in charNms.indices) {
+                if (i == 3) {
+                    eventTextChannel.sendMessage("3개까지만 조회 가능합니다.").queue()
+                    break
+                }
+                sendCharacterProfile(eventTextChannel, charNms[i])
+            }
             return
         }
     }
 
-    private fun sendAllCharacterInfomation(eventTextChannel: MessageChannelUnion, contentRaw: String) {
+    private fun sendAllCharacterInfomation(eventTextChannel: MessageChannelUnion, charNm: String) {
 
-        val charNm = contentRaw.replace(Consts.COMMAND_GET_ALL_CHARACTERS, NO_DATA)
         eventTextChannel.sendMessage("$charNm 님 캐릭터들 모두 조회 중...\n").queue()
 
         val response = client.get()
@@ -94,16 +102,17 @@ class RoaCharacterListener(roaClient: RoaClient) : AbstractMessageListener() {
                 .block()
 
         val eb = CommonEmbedBuilder.getEmbedBuilder("$charNm 캐릭터 프로필 조회 결과")
+
         if (profile == null) {
             eb.addField("조회 결과", "없음", false)
             eventTextChannel.sendMessageEmbeds(eb.build()).queue()
             return
         }
+
         if (profile.CharacterImage == null) {
-            eventTextChannel.sendMessage("$charNm 캐릭터 정보를 조회할 수 없습니다. - 캐릭터 이미지 없음!").queue()
-            return
-        }
-        eb.setThumbnail(profile.CharacterImage)
+            eb.appendDescription("캐릭터 이미지 조회 불가")
+        } else eb.setThumbnail(profile.CharacterImage)
+
         eb.addField("서버", profile.ServerName, true)
         eb.addField("길드", profile.GuildName ?: NO_DATA, true)
         eb.addField("닉네임", (profile.Title ?: "") + " $charNm", true)
@@ -118,7 +127,7 @@ class RoaCharacterListener(roaClient: RoaClient) : AbstractMessageListener() {
         eb.addField("영지 레벨", profile.TownLevel ?: NO_DATA, true)
         eb.addBlankField(false)
 
-        for (stat in profile.Stats!!) {
+        for (stat in profile.Stats ?: emptyList()) {
             eb.addField(stat.Type, stat.Value, true)
         }
 
