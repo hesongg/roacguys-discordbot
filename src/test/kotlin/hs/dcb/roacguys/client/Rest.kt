@@ -28,4 +28,14 @@ class Rest {
 
         println(response)
     }
+
+    @Test
+    fun stringToDoubleTest() {
+        val s1 = "1,100.00"
+
+        val s1r = s1.replace(",", "")
+        val d1: Double = s1r.toDouble()
+
+        println(d1)
+    }
 }

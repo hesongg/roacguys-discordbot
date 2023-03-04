@@ -34,8 +34,9 @@ class BasicMessageListener : AbstractMessageListener() {
 
         val eb = CommonEmbedBuilder.getEmbedBuilder("명령어 설명! 업데이트 예정")
         eb.addField(Consts.COMMAND_HELP, Consts.COMMAND_HELP_DESC, false)
-        eb.addField(Consts.COMMAND_CHECK, Consts.COMMAND_CHECK_DESC, true)
-        eb.addField(Consts.COMMAND_GET_ALL_CHARACTERS, Consts.COMMAND_GET_ALL_CHARACTERS_DESC, true)
+        eb.addField(Consts.COMMAND_CHECK, Consts.COMMAND_CHECK_DESC, false)
+        eb.addField(Consts.COMMAND_GET_ALL_CHARACTERS + Consts.VARIABLE_CHARACTER_NAME,
+                Consts.COMMAND_GET_ALL_CHARACTERS_DESC, false)
 
         eb.addBlankField(false)
         eb.setFooter(Consts.MY_REPO)

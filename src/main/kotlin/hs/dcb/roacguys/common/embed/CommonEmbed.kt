@@ -9,7 +9,6 @@ class CommonEmbedBuilder {
         fun getEmbedBuilder(title: String): EmbedBuilder {
             val eb = EmbedBuilder()
             eb.setTitle(title)
-            eb.addBlankField(true)
             eb.setColor(Color.GREEN)
 
             return eb

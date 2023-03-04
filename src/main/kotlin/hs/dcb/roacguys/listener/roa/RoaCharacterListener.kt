@@ -15,6 +15,10 @@ class RoaCharacterListener(private var characterClient: CharacterClient) : Abstr
 
     val log = LoggerFactory.getLogger(RoaCharacterListener::class.java)
 
+    companion object {
+        const val CHARACTERS_SHOW_LIMIT = 3
+    }
+
     override fun execute(event: MessageReceivedEvent) {
         commandLogging(event)
 
@@ -29,6 +33,7 @@ class RoaCharacterListener(private var characterClient: CharacterClient) : Abstr
     private fun sendAllCharacterInfomation(eventTextChannel: MessageChannelUnion, contentRaw: String) {
 
         val charNm = contentRaw.replace(Consts.COMMAND_GET_ALL_CHARACTERS, "")
+        eventTextChannel.sendMessage("$charNm 님 캐릭터들 모두 조회 중...\n").queue()
 
         val client = characterClient.getClient()
 
@@ -43,18 +48,28 @@ class RoaCharacterListener(private var characterClient: CharacterClient) : Abstr
         val eb = CommonEmbedBuilder.getEmbedBuilder("$charNm 의 캐릭터 모두 조회 결과")
         if (charInfos.isNullOrEmpty()) {
             eb.addField("조회 결과", "없음", false)
+            eventTextChannel.sendMessageEmbeds(eb.build()).queue()
             return
         }
-        eb.addField("캐릭터 개수", "총 ${charInfos.size} 개", false)
+        eb.addField("캐릭터 개수", "총 ${charInfos.size} 개", true)
         eb.addBlankField(false)
 
-        for (characterInfo in charInfos) {
-            eb.addField("서버명", characterInfo.ServerName, false)
-            eb.addField("캐릭터명", characterInfo.CharacterName, false)
-            eb.addField("레벨", characterInfo.CharacterLevel.toString(), false)
-            eb.addField("클래스", characterInfo.CharacterClassName, false)
-            eb.addField("평균 아이템 레벨", characterInfo.ItemAvgLevel, false)
-            eb.addField("Max 아이템 레벨", characterInfo.ItemMaxLevel, false)
+        if (charInfos.size > CHARACTERS_SHOW_LIMIT) {
+            eventTextChannel.sendMessage("아이템 레벨 상위 3개까지만 조회 가능합니다.").queue()
+        }
+
+        val itemLevelSortedCharInfos = charInfos.sortedByDescending { charInfo ->
+            charInfo.ItemAvgLevel.replace(",", "").toDoubleOrNull() ?: 0.0
+        }
+        for (i in itemLevelSortedCharInfos.indices) {
+            if (i == CHARACTERS_SHOW_LIMIT) break
+
+            eb.addField("서버명", charInfos[i].ServerName, true)
+            eb.addField("닉네임", itemLevelSortedCharInfos[i].CharacterName, true)
+            eb.addField("레벨", itemLevelSortedCharInfos[i].CharacterLevel.toString(), true)
+            eb.addField("클래스", itemLevelSortedCharInfos[i].CharacterClassName, true)
+            eb.addField("평균 아이템 레벨", itemLevelSortedCharInfos[i].ItemAvgLevel, true)
+//            eb.addField("Max 아이템 레벨", characterInfo.ItemMaxLevel, false)
             eb.addBlankField(false)
         }
 
