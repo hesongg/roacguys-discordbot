@@ -2,10 +2,8 @@ package hs.dcb.roacguys.listener
 
 import hs.dcb.roacguys.common.const.Consts
 import hs.dcb.roacguys.common.embed.CommonEmbedBuilder
-import hs.dcb.roacguys.common.exception.MessageException
 import hs.dcb.roacguys.listener.abstract.AbstractMessageListener
 import net.dv8tion.jda.api.entities.User
-import net.dv8tion.jda.api.entities.channel.ChannelType
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import org.slf4j.LoggerFactory
@@ -17,16 +15,9 @@ class BasicMessageListener : AbstractMessageListener() {
     val log = LoggerFactory.getLogger(BasicMessageListener::class.java)
 
     override fun execute(event: MessageReceivedEvent) {
-
-        if (isBotMessage(event)) return
-
-        doReturnIsDirectMessage(event)
-
-        val contentRaw = event.message.contentRaw
-        if (isNotCommandMessage(contentRaw)) return
-
         commandLogging(event)
 
+        val contentRaw = event.message.contentRaw
         val eventTextChannel = event.channel
         val user = event.author
 
@@ -44,6 +35,7 @@ class BasicMessageListener : AbstractMessageListener() {
         val eb = CommonEmbedBuilder.getEmbedBuilder("명령어 설명! 업데이트 예정")
         eb.addField(Consts.COMMAND_HELP, Consts.COMMAND_HELP_DESC, false)
         eb.addField(Consts.COMMAND_CHECK, Consts.COMMAND_CHECK_DESC, true)
+        eb.addField(Consts.COMMAND_GET_ALL_CHARACTERS, Consts.COMMAND_GET_ALL_CHARACTERS_DESC, true)
 
         eb.addBlankField(false)
         eb.setFooter(Consts.MY_REPO)
@@ -55,26 +47,6 @@ class BasicMessageListener : AbstractMessageListener() {
         eventTextChannel.sendMessage(user.asMention + "님, 뭐요?").queue()
     }
 
-    private fun isNotCommandMessage(contentRaw: String): Boolean {
-        if (!contentRaw.startsWith("!")) return true
-        return false
-    }
-
-    private fun isBotMessage(event: MessageReceivedEvent): Boolean {
-        if (event.author.isBot) return true
-
-        return false
-    }
-
-    private fun doReturnIsDirectMessage(event: MessageReceivedEvent) {
-        if (event.isFromType(ChannelType.PRIVATE)) {
-            log.info("[DM] {}: {}",
-                    event.author.name,
-                    event.message.contentDisplay)
-
-            throw MessageException("개인 메세지 입니다.")
-        }
-    }
 
     private fun commandLogging(event: MessageReceivedEvent) {
         log.info("[{}][{}] {}: {}",
