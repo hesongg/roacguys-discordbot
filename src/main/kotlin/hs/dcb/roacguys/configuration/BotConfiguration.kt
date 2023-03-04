@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration
 import javax.annotation.PostConstruct
 
 @Configuration
-class BotConfiguration(private var listeners: Array<ListenerAdapter>) {
+class BotConfiguration(private val listeners: Array<ListenerAdapter>) {
 
     @Value("\${bot.token}")
     private lateinit var token: String
