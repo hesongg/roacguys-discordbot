@@ -3,7 +3,7 @@ package hs.dcb.roacguys.listener.roa
 import hs.dcb.roacguys.common.const.Consts
 import hs.dcb.roacguys.common.embed.CommonEmbedBuilder
 import hs.dcb.roacguys.listener.abstract.AbstractMessageListener
-import hs.dcb.roacguys.webClient.roa.CharacterClient
+import hs.dcb.roacguys.webClient.roa.RoaClient
 import hs.dcb.roacguys.webClient.roa.model.charInfo.CharacterInfo
 import hs.dcb.roacguys.webClient.roa.model.profile.CharacterProfile
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion
@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
-class RoaCharacterListener(private var characterClient: CharacterClient) : AbstractMessageListener() {
+class RoaCharacterListener(roaClient: RoaClient) : AbstractMessageListener() {
 
     companion object {
         private val log = LoggerFactory.getLogger(RoaCharacterListener::class.java)
@@ -20,7 +20,7 @@ class RoaCharacterListener(private var characterClient: CharacterClient) : Abstr
         const val NO_DATA = ""
     }
 
-    private val client = characterClient.getClient()
+    private val client = roaClient.getClient()
 
     override fun execute(event: MessageReceivedEvent) {
         commandLogging(event)

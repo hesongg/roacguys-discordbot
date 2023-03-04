@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 
 @Component
-class CharacterClient {
+class RoaClient {
 
     @Value("\${roa-api.token}")
     private lateinit var token: String
