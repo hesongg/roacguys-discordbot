@@ -12,7 +12,9 @@ import org.springframework.stereotype.Service
 @Service
 class BasicMessageListener : AbstractMessageListener() {
 
-    val log = LoggerFactory.getLogger(BasicMessageListener::class.java)
+    companion object {
+        private val log = LoggerFactory.getLogger(BasicMessageListener::class.java)
+    }
 
     override fun execute(event: MessageReceivedEvent) {
         commandLogging(event)
@@ -37,6 +39,8 @@ class BasicMessageListener : AbstractMessageListener() {
         eb.addField(Consts.COMMAND_CHECK, Consts.COMMAND_CHECK_DESC, false)
         eb.addField(Consts.COMMAND_GET_ALL_CHARACTERS + Consts.VARIABLE_CHARACTER_NAME,
                 Consts.COMMAND_GET_ALL_CHARACTERS_DESC, false)
+        eb.addField(Consts.COMMAND_GET_PROFILE + Consts.VARIABLE_CHARACTER_NAME,
+                Consts.COMMAND_GET_PROFILE_DESC, false)
 
         eb.addBlankField(false)
         eb.setFooter(Consts.MY_REPO)

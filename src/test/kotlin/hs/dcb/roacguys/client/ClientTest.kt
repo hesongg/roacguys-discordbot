@@ -7,7 +7,7 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono
 
 @SpringBootTest
-class Rest {
+class ClientTest {
     companion object {
         const val TOKEN = "secret"
     }

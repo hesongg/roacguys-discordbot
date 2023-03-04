@@ -9,10 +9,12 @@ abstract class Consts {
 
         const val COMMAND_HELP = "!help"
         const val COMMAND_CHECK = "!되나"
-        const val COMMAND_GET_ALL_CHARACTERS = "!모두조회 "
+        const val COMMAND_GET_ALL_CHARACTERS = "!캐릭터들 "
+        const val COMMAND_GET_PROFILE = "!프로필 "
 
         const val COMMAND_HELP_DESC = "로악 guys Help"
         const val COMMAND_CHECK_DESC = "봇 상태 체크"
-        const val COMMAND_GET_ALL_CHARACTERS_DESC = "캐릭터 명으로 조회 시 해당 계정 캐릭터 3개까지 조회 가능"
+        const val COMMAND_GET_ALL_CHARACTERS_DESC = "캐릭터 명으로 조회 시 해당 계정 캐릭터 3개까지 조회"
+        const val COMMAND_GET_PROFILE_DESC = "!프로필 캐릭터 명으로 조회 시 해당 캐릭터 프로필 조회"
     }
 }

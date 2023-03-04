@@ -1,4 +1,4 @@
-package hs.dcb.roacguys.webClient.roa.model
+package hs.dcb.roacguys.webClient.roa.model.charInfo
 
 data class CharacterInfo(
         val ServerName: String,
