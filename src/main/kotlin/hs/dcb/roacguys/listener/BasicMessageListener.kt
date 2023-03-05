@@ -25,10 +25,17 @@ class BasicMessageListener : AbstractMessageListener() {
 
         if (contentRaw == Consts.COMMAND_HELP) {
             sendHelpMessage(eventTextChannel)
+            return
         }
 
         if (contentRaw == Consts.COMMAND_CHECK) {
             sendCheckMessage(eventTextChannel, user)
+            return
+        }
+
+        if (contentRaw.startsWith(Consts.COMMAND_GET_MEMBER_PROFILE_PICTURE)) {
+            sendMemberPictureUrl(event)
+            return
         }
     }
 
@@ -37,6 +44,8 @@ class BasicMessageListener : AbstractMessageListener() {
         val eb = CommonEmbedBuilder.getEmbedBuilder("명령어 설명! 업데이트 예정")
         eb.addField(Consts.COMMAND_HELP, Consts.COMMAND_HELP_DESC, false)
         eb.addField(Consts.COMMAND_CHECK, Consts.COMMAND_CHECK_DESC, false)
+        eb.addField(Consts.COMMAND_GET_MEMBER_PROFILE_PICTURE +
+                Consts.VARIABLE_MEMBER_MENTION, Consts.COMMAND_GET_MEMBER_PROFILE_PICTURE_DESC, false)
         eb.addField(Consts.COMMAND_GET_ALL_CHARACTERS + Consts.VARIABLE_CHARACTER_NAME,
                 Consts.COMMAND_GET_ALL_CHARACTERS_DESC, false)
         eb.addField(Consts.COMMAND_GET_PROFILE +
@@ -46,13 +55,26 @@ class BasicMessageListener : AbstractMessageListener() {
         eb.addBlankField(false)
         eb.setFooter(Consts.MY_REPO)
 
-        eventTextChannel.sendMessageEmbeds(eb.build()).queue()
+        sendEmbedMessage(eventTextChannel, eb)
     }
 
     private fun sendCheckMessage(eventTextChannel: MessageChannelUnion, user: User) {
-        eventTextChannel.sendMessage(user.asMention + "님, 뭐요?").queue()
+        sendMessage(eventTextChannel, user.asMention + "님, 뭐요?")
     }
 
+    private fun sendMemberPictureUrl(event: MessageReceivedEvent) {
+        val users = event.message.mentions.users
+        if (users.isEmpty()) {
+            sendMessage(event, "멘션된 멤버 정보가 없습니다.")
+            return
+        }
+        if (users[0].avatarUrl == null) {
+            sendMessage(event, "해당 멤버의 프로필 사진 정보가 없습니다.")
+            return
+        }
+
+        sendMessage(event, users[0].avatarUrl.toString() + "?size=4096")
+    }
 
     private fun commandLogging(event: MessageReceivedEvent) {
         log.info("[{}][{}] {}: {}",

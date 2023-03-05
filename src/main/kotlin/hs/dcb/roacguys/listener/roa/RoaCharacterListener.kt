@@ -29,7 +29,8 @@ class RoaCharacterListener(roaClient: RoaClient) : AbstractMessageListener() {
         val eventTextChannel = event.channel
 
         if (contentRaw.startsWith(Consts.COMMAND_GET_ALL_CHARACTERS)) {
-            sendAllCharacterInfomation(eventTextChannel, contentRaw)
+            val charNm = contentRaw.replace(Consts.COMMAND_GET_ALL_CHARACTERS, "")
+            sendAllCharacterInfomation(eventTextChannel, charNm)
             return
         }
         if (contentRaw.startsWith(Consts.COMMAND_GET_PROFILE)) {
@@ -38,7 +39,7 @@ class RoaCharacterListener(roaClient: RoaClient) : AbstractMessageListener() {
 
             for (i in charNms.indices) {
                 if (i == 3) {
-                    eventTextChannel.sendMessage("3개까지만 조회 가능합니다.").queue()
+                    sendMessage(eventTextChannel, "3개까지만 조회 가능합니다.")
                     break
                 }
                 sendCharacterProfile(eventTextChannel, charNms[i])
@@ -49,7 +50,7 @@ class RoaCharacterListener(roaClient: RoaClient) : AbstractMessageListener() {
 
     private fun sendAllCharacterInfomation(eventTextChannel: MessageChannelUnion, charNm: String) {
 
-        eventTextChannel.sendMessage("$charNm 님 캐릭터들 모두 조회 중...\n").queue()
+        sendMessage(eventTextChannel, "$charNm 님 캐릭터들 모두 조회 중...\n")
 
         val response = client.get()
                 .uri("/characters/$charNm/siblings")
@@ -62,14 +63,14 @@ class RoaCharacterListener(roaClient: RoaClient) : AbstractMessageListener() {
         val eb = CommonEmbedBuilder.getEmbedBuilder("$charNm 의 캐릭터 모두 조회 결과")
         if (charInfos.isNullOrEmpty()) {
             eb.addField("조회 결과", "없음", false)
-            eventTextChannel.sendMessageEmbeds(eb.build()).queue()
+            sendEmbedMessage(eventTextChannel, eb)
             return
         }
         eb.addField("캐릭터 개수", "총 ${charInfos.size} 개", true)
         eb.addBlankField(false)
 
         if (charInfos.size > CHARACTERS_SHOW_LIMIT) {
-            eventTextChannel.sendMessage("아이템 레벨 상위 3개까지만 조회 가능합니다.").queue()
+            sendMessage(eventTextChannel, "아이템 레벨 상위 3개까지만 조회 가능합니다.")
         }
 
         val itemLevelSortedCharInfos = charInfos.sortedByDescending {
@@ -87,13 +88,13 @@ class RoaCharacterListener(roaClient: RoaClient) : AbstractMessageListener() {
             eb.addBlankField(false)
         }
 
-        eventTextChannel.sendMessageEmbeds(eb.build()).queue()
+        sendEmbedMessage(eventTextChannel, eb)
     }
 
     private fun sendCharacterProfile(eventTextChannel: MessageChannelUnion, contentRaw: String) {
 
         val charNm = contentRaw.replace(Consts.COMMAND_GET_PROFILE, "")
-        eventTextChannel.sendMessage("$charNm 캐릭터 조회 중...\n").queue()
+        sendMessage(eventTextChannel, "$charNm 캐릭터 조회 중...\n")
 
         val profile = client.get()
                 .uri("armories/characters/$charNm/profiles")
@@ -105,7 +106,7 @@ class RoaCharacterListener(roaClient: RoaClient) : AbstractMessageListener() {
 
         if (profile == null) {
             eb.addField("조회 결과", "없음", false)
-            eventTextChannel.sendMessageEmbeds(eb.build()).queue()
+            sendEmbedMessage(eventTextChannel, eb)
             return
         }
 
@@ -131,7 +132,7 @@ class RoaCharacterListener(roaClient: RoaClient) : AbstractMessageListener() {
             eb.addField(stat.Type, stat.Value, true)
         }
 
-        eventTextChannel.sendMessageEmbeds(eb.build()).queue()
+        sendEmbedMessage(eventTextChannel, eb)
     }
 
     private fun commandLogging(event: MessageReceivedEvent) {
