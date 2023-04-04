@@ -23,18 +23,23 @@ class BasicMessageListener : AbstractMessageListener() {
         val eventTextChannel = event.channel
         val user = event.author
 
-        if (contentRaw == Consts.COMMAND_HELP) {
+        if (isCommand(contentRaw, Consts.COMMAND_HELP)) {
             sendHelpMessage(eventTextChannel)
             return
         }
 
-        if (contentRaw == Consts.COMMAND_CHECK) {
+        if (isCommand(contentRaw, Consts.COMMAND_CHECK)) {
             sendCheckMessage(eventTextChannel, user)
             return
         }
 
-        if (contentRaw.startsWith(Consts.COMMAND_GET_MEMBER_PROFILE_PICTURE)) {
+        if (isCommandStartsWith(contentRaw, Consts.COMMAND_GET_MEMBER_PROFILE_PICTURE)) {
             sendMemberPictureUrl(event)
+            return
+        }
+
+        if (isCommandStartsWith(contentRaw, Consts.COMMAND_GET_CHEAT_SHEET)) {
+            sendCheatSheetImage(contentRaw, eventTextChannel)
             return
         }
     }
@@ -51,6 +56,7 @@ class BasicMessageListener : AbstractMessageListener() {
         eb.addField(Consts.COMMAND_GET_PROFILE +
                 Consts.VARIABLE_CHARACTER_NAME + "," + Consts.VARIABLE_CHARACTER_NAME,
                 Consts.COMMAND_GET_PROFILE_DESC, false)
+        eb.addField(Consts.COMMAND_GET_CHEAT_SHEET, Consts.COMMAND_GET_CHEAT_SHEET_DESC, false)
 
         eb.addBlankField(false)
         eb.setFooter(Consts.MY_REPO)
@@ -74,6 +80,10 @@ class BasicMessageListener : AbstractMessageListener() {
         }
 
         sendMessage(event, users[0].avatarUrl.toString() + "?size=4096")
+    }
+
+    private fun sendCheatSheetImage(contentRaw: String, eventTextChannel: MessageChannelUnion) {
+        val raid = contentRaw.replace(Consts.COMMAND_GET_CHEAT_SHEET, "")
     }
 
     private fun commandLogging(event: MessageReceivedEvent) {

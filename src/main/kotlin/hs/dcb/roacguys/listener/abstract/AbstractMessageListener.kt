@@ -31,6 +31,14 @@ abstract class AbstractMessageListener : ListenerAdapter() {
         return !contentRaw.startsWith("!")
     }
 
+    protected fun isCommand(content: String, commandStr: String): Boolean {
+        return content == commandStr
+    }
+
+    protected fun isCommandStartsWith(content: String, commandStr: String): Boolean {
+        return content.startsWith(commandStr)
+    }
+
     protected fun sendMessage(event: MessageReceivedEvent, msg: String) {
         event.channel.sendMessage(msg).queue()
     }

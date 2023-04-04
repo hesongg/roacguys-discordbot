@@ -13,7 +13,9 @@ import org.springframework.stereotype.Component
 @Aspect
 class ExceptionAopConfig {
 
-    val log = LoggerFactory.getLogger(BasicMessageListener::class.java)
+    companion object {
+        private val log = LoggerFactory.getLogger(BasicMessageListener::class.java)
+    }
 
     @Pointcut("execution(* hs.dcb.roacguys.listener..*(..))")
     fun defaultPointcut() {}

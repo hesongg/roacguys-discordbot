@@ -28,12 +28,12 @@ class RoaCharacterListener(roaClient: RoaClient) : AbstractMessageListener() {
         val contentRaw = event.message.contentRaw
         val eventTextChannel = event.channel
 
-        if (contentRaw.startsWith(Consts.COMMAND_GET_ALL_CHARACTERS)) {
+        if (isCommandStartsWith(contentRaw, Consts.COMMAND_GET_ALL_CHARACTERS)) {
             val charNm = contentRaw.replace(Consts.COMMAND_GET_ALL_CHARACTERS, "")
             sendAllCharacterInfomation(eventTextChannel, charNm)
             return
         }
-        if (contentRaw.startsWith(Consts.COMMAND_GET_PROFILE)) {
+        if (isCommandStartsWith(contentRaw, Consts.COMMAND_GET_PROFILE)) {
             val charNmsStr = contentRaw.replace(Consts.COMMAND_GET_PROFILE, "")
             val charNms = charNmsStr.split(",")
 
