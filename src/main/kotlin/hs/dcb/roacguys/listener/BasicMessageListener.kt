@@ -6,8 +6,11 @@ import hs.dcb.roacguys.listener.abstract.AbstractMessageListener
 import net.dv8tion.jda.api.entities.User
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
+import net.dv8tion.jda.api.utils.FileUpload
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import java.io.File
+import java.nio.file.Paths
 
 @Service
 class BasicMessageListener : AbstractMessageListener() {
@@ -84,6 +87,15 @@ class BasicMessageListener : AbstractMessageListener() {
 
     private fun sendCheatSheetImage(contentRaw: String, eventTextChannel: MessageChannelUnion) {
         val raid = contentRaw.replace(Consts.COMMAND_GET_CHEAT_SHEET, "")
+
+        val resource = Thread.currentThread().contextClassLoader.getResourceAsStream("static/roaCheatSheet/bal.jpeg")
+
+        eventTextChannel.sendMessage("이미지 테스트").addFiles(FileUpload.fromData(resource, "bal.jpeg")).queue()
+
+        val file = File("static/roaCheatSheet/bal.jpeg")
+        val eb = CommonEmbedBuilder.getEmbedBuilder("이미지 전송 테스트")
+
+        sendEmbedMessage(eventTextChannel, eb)
     }
 
     private fun commandLogging(event: MessageReceivedEvent) {
